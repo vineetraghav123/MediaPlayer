@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="ac" prefHeight="462.0" prefWidth="690.0" styleClass="ac" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainUIController">
+   <children>
+      <Pane fx:id="p" layoutX="0.0" layoutY="0.0" prefHeight="462.0" prefWidth="690.0" styleClass="p">
+         <children>
+          		<BorderPane fx:id="outer" maxHeight="-Infinity" prefHeight="462.0" prefWidth="690.0" styleClass="bp">
+				   <top>
+				      <Pane prefHeight="64.0" prefWidth="723.0" styleClass="control" BorderPane.alignment="CENTER">
+				         <children>
+				            <JFXButton fx:id="close" buttonType="RAISED" layoutX="667.0" onAction="#close" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: red;" text="X" textFill="WHITE">
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <JFXButton fx:id="info" buttonType="RAISED" layoutX="597.0" layoutY="16.0" onAction="#info" prefHeight="35.0" prefWidth="34.0">
+				               <graphic>
+				                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/info.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <JFXButton fx:id="drawerbutton" buttonType="RAISED" focusTraversable="false" layoutY="27.0" onAction="#drawer" prefHeight="35.0" prefWidth="34.0" textFill="WHITE">
+				               <font>
+				                  <Font name="System Bold" size="9.0" />
+				               </font>
+				               <padding>
+				                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+				               </padding>
+				               <graphic>
+				                  <ImageView fx:id="drawerview" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/songs.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <Label fx:id="l" layoutX="83.0" layoutY="3.0" prefHeight="22.0" prefWidth="330.0" />
+				            <Label fx:id="logo" prefHeight="22.0" prefWidth="81.0" style="-fx-background-color: purple;" text=" &lt;  #Music  /&gt; " textFill="WHITE" />
+				            <Label fx:id="warning" alignment="CENTER" layoutX="258.0" layoutY="42.0" prefHeight="17.0" prefWidth="199.0" textAlignment="CENTER" textFill="#ff6011">
+				               <font>
+				                  <Font size="14.0" />
+				               </font></Label>
+				            <JFXColorPicker fx:id="cp" editable="true" layoutX="494.0" layoutY="22.0" onAction="#color" opacity="0.89" promptText="Color">
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXColorPicker>
+				            <JFXToggleButton fx:id="tb" focusTraversable="false" layoutX="37.0" layoutY="17.0" onAction="#toggleButton" prefHeight="58.0" prefWidth="53.0">
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor>
+				            </JFXToggleButton>
+				            <JFXButton fx:id="minimize" buttonType="RAISED" layoutX="644.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: green;" text="--" textFill="WHITE">
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor>
+				            </JFXButton>
+                        <JFXButton fx:id="bgimage" buttonType="RAISED" layoutX="439.0" layoutY="16.0" onAction="#setBackground" prefHeight="38.0" prefWidth="43.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="/photo/background.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="search" buttonType="RAISED" layoutX="97.0" layoutY="27.0" onAction="#search" prefHeight="38.0" prefWidth="43.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="/photo/musicsearch.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXTextField fx:id="searchinput" layoutX="154.0" layoutY="30.0" />
+                        <JFXButton fx:id="searchclose" buttonType="RAISED" layoutX="297.0" layoutY="34.0" onAction="#searchclose" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: orange;" text="&lt;" textFill="WHITE">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </JFXButton>
+				         </children></Pane>
+				   </top>
+				   <bottom>
+				      <Pane prefHeight="99.0" prefWidth="723.0" styleClass="control" BorderPane.alignment="CENTER">
+				         <children>
+				            <JFXButton fx:id="play" buttonType="RAISED" layoutX="317.0" layoutY="23.0" onAction="#play" prefHeight="57.0" prefWidth="67.0">
+				               <graphic>
+				                  <ImageView fx:id="playbuttonview" fitHeight="53.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/play.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <JFXButton fx:id="previous" buttonType="RAISED" layoutX="217.0" layoutY="23.0" onAction="#previous" prefHeight="55.0" prefWidth="65.0">
+				               <graphic>
+				                  <ImageView fitHeight="49.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/pb1.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <JFXButton fx:id="next" buttonType="RAISED" layoutX="417.0" layoutY="23.0" onAction="#next" prefHeight="55.0" prefWidth="65.0">
+				               <graphic>
+				                  <ImageView fitHeight="49.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/ffb2.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+				            <ProgressBar fx:id="pb" layoutY="90.0" maxHeight="10.0" minHeight="10.0" prefHeight="10.0" prefWidth="690.0" progress="0.0" style="-fx-background-color: green;" />
+				            <JFXButton fx:id="repeat" buttonType="RAISED" layoutX="498.0" layoutY="31.0" onAction="#repeat" prefHeight="46.0" prefWidth="48.0">
+				               <graphic>
+				                  <ImageView fx:id="repeatview" fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/repeatA.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor>
+				            </JFXButton>
+				            <JFXButton fx:id="shuffle" buttonType="RAISED" layoutX="147.0" layoutY="31.0" onAction="#shuffle" prefHeight="46.0" prefWidth="48.0">
+				               <graphic>
+				                  <ImageView fx:id="shuffleview" fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/shuffleblack.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor>
+				            </JFXButton>
+				            <JFXButton fx:id="fav" buttonType="RAISED" layoutX="563.0" layoutY="31.0" onAction="#favsong" prefHeight="46.0" prefWidth="48.0">
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor>
+				               <graphic>
+				                  <ImageView fx:id="favview" fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/repeatA.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				            </JFXButton>
+				            <JFXButton fx:id="folderopen" buttonType="RAISED" layoutX="82.0" layoutY="31.0" onAction="#selectfile" prefHeight="46.0" prefWidth="48.0">
+				               <graphic>
+				                  <ImageView fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+				                     <image>
+				                        <Image url="/photo/addmusic.png" />
+				                     </image>
+				                  </ImageView>
+				               </graphic>
+				               <cursor>
+				                  <Cursor fx:constant="HAND" />
+				               </cursor></JFXButton>
+                        <JFXButton fx:id="fast" buttonType="RAISED" layoutX="622.0" layoutY="31.0" onAction="#fast" prefHeight="46.0" prefWidth="48.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <graphic>
+                              <ImageView fx:id="fastview" fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="/photo/fast.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="slow" buttonType="RAISED" layoutX="22.0" layoutY="31.0" onAction="#slow" prefHeight="46.0" prefWidth="48.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <graphic>
+                              <ImageView fx:id="slowview" fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="/photo/slow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+				         </children>
+				      </Pane>
+				   </bottom>
+				   <left>
+				      <ScrollPane fx:id="scpane" minWidth="0.0" prefHeight="295.0" prefWidth="3.0" styleClass="scpane" BorderPane.alignment="CENTER">
+				         <content>
+				            <VBox fx:id="vb" prefHeight="295.0" prefWidth="0.0" styleClass="vb" />
+				         </content>
+				      </ScrollPane>
+				   </left>
+               <center>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane prefHeight="38.0" prefWidth="679.0">
+                           <children>
+                              <Label fx:id="starttime" alignment="CENTER" layoutX="75.0" layoutY="284.0" prefHeight="17.0" prefWidth="33.0" textFill="WHITE" />
+                              <Label fx:id="endtime" alignment="CENTER" layoutX="557.0" layoutY="284.0" prefHeight="17.0" prefWidth="43.0" textFill="WHITE" />
+                              <ImageView fx:id="speaker" fitHeight="33.0" fitWidth="33.0" layoutX="652.0" layoutY="245.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="/photo/speaker60.png" />
+                                 </image>
+                              </ImageView>
+                              <JFXButton fx:id="maximize" onAction="#maximize" prefHeight="25.0" prefWidth="79.0" text="Full Screen" />
+                           </children>
+                        </Pane>
+                        <BorderPane fx:id="innerBP" prefHeight="299.0" prefWidth="670.0">
+                           <center>
+                              <ImageView fx:id="imageview" fitHeight="145.0" fitWidth="279.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <effect>
+                                    <Glow />
+                                 </effect>
+                                 <BorderPane.margin>
+                                    <Insets />
+                                 </BorderPane.margin>
+                              </ImageView>
+                           </center>
+                           <bottom>
+                              <JFXSlider fx:id="seekslider" maxHeight="20.0" maxWidth="435.0" prefHeight="20.0" prefWidth="435.0" BorderPane.alignment="CENTER">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <BorderPane.margin>
+                                    <Insets right="20.0" />
+                                 </BorderPane.margin>
+                              </JFXSlider>
+                           </bottom>
+                           <right>
+                              <JFXSlider fx:id="volumeslider" maxHeight="200.0" maxWidth="0.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" BorderPane.alignment="CENTER">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <BorderPane.margin>
+                                    <Insets right="15.0" />
+                                 </BorderPane.margin>
+                              </JFXSlider>
+                           </right>
+                        </BorderPane>
+                     </children>
+                  </StackPane>
+               </center>
+				</BorderPane>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="164.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" layoutY="7.0" prefHeight="45.0" prefWidth="106.0" style="-fx-background-color: purple;" text="&lt; #Music /&gt;" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutY="59.0" prefHeight="45.0" prefWidth="165.0" style="-fx-background-color: green;" text="Vineet Raghav" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutY="112.0" prefHeight="45.0" prefWidth="233.0" style="-fx-background-color: skyblue;" text="vineet.vineet.raghav@gmail.com" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="45.0" fitWidth="34.0" layoutX="117.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/photo/hdp.png" />
+         </image>
+      </ImageView>
+      <Pane layoutX="264.0" prefHeight="164.0" prefWidth="129.0">
+         <children>
+            <Label layoutY="6.0" text="Shortcuts" />
+            <Label layoutY="23.0" prefHeight="17.0" prefWidth="156.0" text="Space-Play/Pause" />
+            <Label layoutY="40.0" prefHeight="17.0" prefWidth="156.0" text="N-Next | P-Previous" />
+            <Label layoutY="55.0" prefHeight="17.0" prefWidth="156.0" text="CTRL+S-Search" />
+            <Label layoutY="69.0" prefHeight="17.0" prefWidth="156.0" text="S-Slow | F-Fast" />
+            <Label layoutY="85.0" prefHeight="17.0" prefWidth="156.0" text="C-Clear List" />
+            <Label layoutY="99.0" prefHeight="17.0" prefWidth="156.0" text="H-Shuffle" />
+            <Label layoutY="115.0" prefHeight="17.0" prefWidth="156.0" text="L-Load Favorite Songs" />
+            <Label layoutY="132.0" prefHeight="17.0" prefWidth="156.0" text="CTRL+F Set Favorite" />
+            <Label layoutY="148.0" prefHeight="17.0" prefWidth="156.0" text="R-Repeat" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

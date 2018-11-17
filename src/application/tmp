@@ -1,0 +1,753 @@
+package application;
+
+import java.io.File;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.ResourceBundle;
+import java.util.Stack;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXColorPicker;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.media.MediaPlayer.Status;
+import javafx.stage.FileChooser;
+import javafx.util.Duration;
+
+public class MainUIController implements Initializable{
+	Random r=new Random();
+	static HashMap<Integer,String> t=new HashMap<>();
+	static HashMap<Integer,String> t1=new HashMap<>();
+	Stack<Integer> prev=new Stack<>();
+	Connection conn=null;
+	static int i=0;
+	static Media media;
+	static MediaPlayer mp;
+	static JFXButton[] btn;
+	double  totalTimeOfMusic;
+	static int songno=0;
+	@FXML
+	JFXButton close;
+	@FXML
+	ImageView imageview;
+	@FXML
+	Label starttime;
+	@FXML
+	Label endtime;
+	@FXML
+	ProgressBar pb;
+	@FXML
+	JFXButton folderopen;
+	@FXML
+	JFXButton play;
+	@FXML
+	JFXButton info;
+	@FXML
+	JFXButton next;
+	@FXML
+	JFXButton previous;
+	@FXML
+	JFXButton drawerbutton;
+	@FXML
+	JFXButton fav;
+	@FXML
+	BorderPane outer;
+	@FXML
+	JFXSlider volumeslider;
+	@FXML
+	Slider seekslider;
+	@FXML 
+	ImageView playbuttonview;
+	@FXML
+	ImageView drawerview;
+	@FXML
+	ImageView favview;
+	@FXML
+	VBox vb;
+	VBox vb2=new VBox();
+	@FXML
+	Pane pane;
+	@FXML
+	ImageView speaker;
+	@FXML
+	JFXButton shuffle;
+	@FXML
+	ImageView shuffleview;
+	@FXML
+	JFXButton repeat;
+	@FXML
+	ImageView repeatview;
+	static String currentsong;
+	@FXML
+	ScrollPane scpane;
+	MediaView mediaView;
+	@FXML
+	JFXColorPicker cp;
+	@FXML
+	JFXToggleButton tb;
+	@FXML
+	Label l;
+	@FXML
+	Label logo;
+	@FXML
+	Label warning;
+	static int repeatflag=0;
+	static boolean shuffleflag=false;
+	static boolean previousflag=false;
+	int first=0;
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		setDB();
+		setcolor();
+		cp.setTooltip(new Tooltip("Color"));
+	//vb.setStyle("-fx-background-color: rgba(128,0,128, 0.5);");
+	//outer.setStyle("-fx-background-color: rgba(0,255,127, 0.6);");
+		
+		drawerbutton.setTooltip(new Tooltip("Playlist"));
+		folderopen.setTooltip(new Tooltip("Open Folder"));
+		previous.setTooltip(new Tooltip("Previous"));
+		next.setTooltip(new Tooltip("Next"));
+		shuffle.setTooltip(new Tooltip("Shuffle Off"));
+		repeat.setTooltip(new Tooltip("Repeat All"));
+		close.setTooltip(new Tooltip("Close"));
+		info.setTooltip(new Tooltip("Info"));
+	Image image=new Image("/photo/concert.jpg");
+	imageview.setImage(image);
+	Image drawerI=new Image("photo/songsclosed.png");
+	drawerview.setImage(drawerI);
+	Image i=new Image("/photo/favblack.png");
+	favview.setImage(i);
+	setdisable();
+	}
+	void loadFav() {
+		if(conn==null)
+			conn=JDBCConnection.connector();
+	
+		try {
+			Statement st=conn.createStatement();
+			String q="SELECT value FROM setting WHERE name='togglebutton';";
+			ResultSet rs=st.executeQuery(q);
+			String value=rs.getString("value");
+			if(value=="on") {
+				q="SELECT * FROM song;";
+				rs=st.executeQuery(q);
+				while(rs.next()) {
+					String name=rs.getString("name");
+					String path=rs.getString("path");
+
+	            	t.put(i,path);
+	            	t1.put(i,name);
+	            	i++;
+					
+				}
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	void setcolor() {
+		if(conn==null)
+			conn=JDBCConnection.connector();
+		try {
+			Statement st=conn.createStatement();
+			String q="SELECT * FROM setting WHERE name='color';";
+			ResultSet rs=st.executeQuery(q);
+			String color=rs.getString("value");
+			if(color==null)
+				color="#f5f6f7";
+			String s="-fx-background-color:"+color+";";
+			outer.setStyle(s);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	@FXML
+	void color() {
+		Color c=cp.getValue();
+		String s1=c.toString();
+		s1=s1.replace("0x", "");
+		String tmp="";
+		for(int i=0;i<6;i++) {
+			tmp=tmp.concat(String.valueOf(s1.charAt(i)));
+		}
+		s1="#";
+		s1=s1.concat(tmp);
+		//System.out.println(s1);
+		String s="-fx-background-color:"+s1+";";
+		outer.setStyle(s);
+		if(conn==null)
+			conn=JDBCConnection.connector();
+		try {
+			Statement st=conn.createStatement();
+			String q="UPDATE setting SET value='"+s1+"' WHERE name='color';";
+			st.execute(q);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	void setdisable() {
+		play.setDisable(true);
+		drawerbutton.setDisable(true);
+		seekslider.setDisable(true);
+		volumeslider.setDisable(true);
+		next.setDisable(true);
+		previous.setDisable(true);
+		fav.setDisable(true);
+	}
+	void setvisible() {
+		play.setTooltip(new Tooltip("Pause"));
+		play.setDisable(false);
+		seekslider.setDisable(false);
+		volumeslider.setDisable(false);
+		drawerbutton.setDisable(false);
+		next.setDisable(false);
+		previous.setDisable(false);
+		fav.setDisable(false);
+	}
+	@FXML
+	void repeat() {
+		//System.out.println(repeatflag);
+		if(repeatflag==0) {
+			repeatflag=1;
+			Image i=new Image("photo/repeat1.png");
+			repeatview.setImage(i);
+			repeat.setTooltip(new Tooltip("Repeat One"));
+			
+			}else if (repeatflag==1) {
+				repeatflag=0;
+				Image i=new Image("photo/repeatA.png");
+				repeatview.setImage(i);
+				repeat.setTooltip(new Tooltip("Repeat All"));
+				
+			}
+	}
+	@FXML
+	void shuffle() {
+		if(shuffleflag==false) {
+			shuffleflag=true;
+			Image i=new Image("photo/shufflegreen.png");
+			shuffleview.setImage(i);
+			shuffle.setTooltip(new Tooltip("Shuffle On"));
+		}else if(shuffleflag==true) {
+			shuffleflag=false;
+			
+			Image i=new Image("photo/shuffleblack.png");
+			shuffleview.setImage(i);
+			shuffle.setTooltip(new Tooltip("Shuffle Off"));
+		}
+	} 
+	void playsong() {
+		if(repeatflag==1) {
+			//btn[songno].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+			btn[songno].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+			mainPlay(songno);
+		}else if(repeatflag==0 && shuffleflag==true && previousflag==false) {
+			btn[songno].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+			int random=r.nextInt(i);
+			mainPlay(random);
+			btn[songno].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+			
+			
+		}else if(previousflag==true) {
+			btn[songno].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+			if(!prev.isEmpty()) {
+				//previous.setDisable(true);
+				songno=(int)prev.pop();
+			}
+			
+			//System.out.println(songno+"added");
+			previousflag=false;
+			btn[songno].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+			mainPlay(songno);
+			
+		}else{
+			//System.out.println("last condition");
+			btn[songno].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+			songno=songno+1;
+			if(songno>=i)
+				songno=0;
+			btn[songno].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+			mainPlay(songno);
+			
+		}
+	}
+	@FXML
+	void next() {
+		mp.stop();
+		playsong();
+	}
+	@FXML
+	void previous() {
+		if(prev.isEmpty()) {
+			//previous.setDisable(true);
+			songno=0;
+			//next();
+		
+		}else {
+		prev.pop();
+		mp.stop();
+		
+		}
+		previousflag=true;
+		playsong();
+	}
+	@FXML
+	void selectfile() {
+		FileChooser fc=new FileChooser();
+		File file=fc.showOpenDialog(null);
+		if(file==null)
+			return;
+		String Parent=file.getParent();
+		String s=file.getPath();
+		
+		if (!s.endsWith(".mp3")) {
+			warning.setText("Select Mp3 Files!");
+			return;
+		}
+		warning.setText("");
+		s=s.replace("\\", "/");
+		String t="file:///";
+		s=t.concat(s);
+		s=s.replaceAll(" ","%20");
+		currentsong=s;
+		//media=new Media(s);
+		if(mp!=null)
+		 mp.stop();
+		if(btn!=null && vb!=null) {
+			vb.getChildren().removeAll(btn);
+		btn=null;
+		//vb=new VBox();
+		}
+		// mp=new MediaPlayer(media);
+		
+		
+		//  mediaView = new MediaView(mp);
+		//System.out.println("after");
+		
+		addSong(Parent);
+		 
+			//seekslider.setValue(0.0);
+			first=songno;
+		mainPlay(songno);
+		
+		//seek(mp);
+		
+	}
+	
+	double round(double d,int p) {
+		if(p>0) {
+			long factor=(long)Math.pow(10, p);
+			d=d*factor;
+			long tmp=Math.round(d);
+			return (double)tmp/factor;
+		}
+			return d;
+	}
+	
+	void seek(MediaPlayer mp) {
+		
+		
+		
+		
+		
+		mp.currentTimeProperty().addListener((Observable)->{
+		     if(seekslider.isValueChanging()){
+		    	 mp.seek(Duration.seconds((seekslider.getValue()*(totalTimeOfMusic)/100)));
+		    
+		     }
+		     
+		     
+		     if(seekslider.isPressed()){
+		    	 mp.seek(Duration.seconds((seekslider.getValue()*(totalTimeOfMusic)/100)));
+		     }
+		       
+		     
+		     seekslider.setValue((mp.getCurrentTime().toSeconds()*100)/totalTimeOfMusic);
+		        
+		     pb.setProgress(seekslider.getValue()/100);
+		 
+		        
+		        
+		        
+		        
+		        int minute=(int)mp.getCurrentTime().toSeconds()/60;
+		        int second=(int)mp.getCurrentTime().toSeconds()%60;
+		        starttime.setText(String.valueOf(minute)+":"+String.valueOf(second));
+		      });
+		
+		 //volumeslider.setValue(40);
+		    mp.setVolume(volumeslider.getValue() / 100);
+		    volumeslider.valueProperty().addListener((Observable) -> {
+		    //	System.out.println(volumeslider.getValue());
+		    	
+		        mp.setVolume(volumeslider.getValue() / 100);
+		        if(volumeslider.getValue()<3) {
+		        	Image i=new Image("photo/speaker0.png");
+		        	speaker.setImage(i);
+		        }else
+		        if(volumeslider.getValue()>3&&volumeslider.getValue()<31) {
+		        	Image i=new Image("photo/speaker30.png");
+		        	speaker.setImage(i);
+		        }else if(volumeslider.getValue()>30&&volumeslider.getValue()<61) {
+		        	Image i=new Image("photo/speaker60.png");
+		        	speaker.setImage(i);
+		        }else if(volumeslider.getValue()>60) {
+		        	Image i=new Image("photo/speaker90.png");
+		        	speaker.setImage(i);
+		        }
+
+		       });
+		    
+		
+			
+			
+			mp.setOnEndOfMedia(new Runnable(){
+
+				@Override
+				public void run() {
+					// System.out.println("end of song");
+					if(!prev.contains(songno)) {
+						prev.add(songno);
+					//	System.out.println(songno+"added");
+						}
+					 playsong();
+				}
+				  
+		
+			});
+			
+	}
+	public static void extract(String p){
+        File f=new File(p);
+        File l[]=f.listFiles();
+       
+        for(File x:l){
+        
+            if(x==null) return;
+            if(x.isHidden()||!x.canRead()) continue;
+            if(x.isDirectory()) extract(x.getPath());
+            else if(x.getName().endsWith(".mp3") && x.length()>1100000) {
+               // System.out.println(x.getPath()+"\\"+x.getName());
+            	//System.out.println(x.getName());
+            	//System.out.println(x.getPath());
+            	//System.out.println(x.getParent());
+            	String name=x.getName();
+            	if(name.contains("[") || name.contains("]")|| name.contains("{")|| name.contains("}")) {
+            		name=name.replace("{", "");
+            		name=name.replace("}", "");
+            		name=name.replace("[", "");
+            		name=name.replace("]", "");
+            		x.renameTo(new File(x.getParent().concat("\\")+name));
+            		//System.out.println(x.getName()+"---->"+x.getParent().concat("\\")+name);
+            	}
+            	String s=x.getPath();
+            	s=s.replace("\\", "/");
+        		String tmp="file:///";
+        		s=tmp.concat(s);
+        		s=s.replaceAll(" ","%20");
+        		
+            	t.put(i,s);
+            	t1.put(i,x.getName());
+           // 	System.out.println(x.getName());
+            	
+			i++;
+            }
+            
+            
+        }
+   //   System.out.println("i"+i);
+        btn=new JFXButton[i];
+        for(int j=0;j<i;j++) {
+        	btn[j]=new JFXButton(t1.get(j));
+        	btn[j].setId(t.get(j));
+        	final int k=j;
+        //	System.out.println(t1.get(j));
+        	btn[k].setOnMouseEntered((EvendHandler)->{
+        		if(!btn[k].getId().equals(media.getSource()) || !btn[k].getId().equals(currentsong))
+        		btn[k].setStyle("-fx-background-color:green;-fx-text-fill:white;-fx-cursor:hand;");
+        		
+        	});
+        	btn[k].setOnMouseExited((EvendHandler)->{
+        		if(!btn[k].getId().equals(media.getSource()) || !btn[k].getId().equals(currentsong))
+        		btn[k].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+        		
+        	});
+        	//System.out.println(btn[j].getId());
+        	//System.out.println(currentsong);
+        	if(btn[j].getId().equals(currentsong)) {
+        		//System.out.println("true");
+        		btn[j].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+        	}
+        	//System.out.println(j);
+        }
+        
+      }
+	
+	@FXML
+	void close() {
+		System.exit(0);
+		if(conn!=null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	int totaltime=0;
+	void mainPlay(int sn) {
+	//	System.out.println(sn);
+		if(songCheck(sn)) {
+			Image i=new Image("/photo/favyellow.png");
+			favview.setImage(i);
+		}else {
+			Image i=new Image("/photo/favblack.png");
+					favview.setImage(i);
+		}
+		l.setText(btn[sn].getText());
+		songno=sn;
+		if(!prev.contains(songno)) {
+			prev.add(songno);
+			previous.setDisable(false);
+		//	System.out.println(songno+"added");
+			}
+		currentsong=(btn[sn].getId());
+		media=new Media(btn[sn].getId());
+		mp=new MediaPlayer(media);
+		
+		mp.setOnReady(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				
+				totalTimeOfMusic=media.getDuration().toSeconds();
+				//totaltime=(int)totalTimeOfMusic;
+				 //endtime.setText(String.valueOf(new DecimalFormat().format(new Duration(totalTimeOfMusic).toMinutes()))+"  /");
+				int minute=(int)totalTimeOfMusic/60;
+				int second=(int)totalTimeOfMusic%60;
+				endtime.setText(String.valueOf(minute)+":"+String.valueOf(second));
+				setvisible();
+				Image i=new Image("photo/pause2.png");
+				playbuttonview.setImage(i);
+				//System.out.println(totalTimeOfMusic);
+				//mp.play();
+				//mp.setAutoPlay(true);
+
+				
+			}
+			
+		});
+		//System.out.println(totaltime+"int");
+	
+		mp.play();
+		mp.setAutoPlay(true);
+		seek(mp);
+		
+	
+		
+		
+	}
+	void addSong(String path) {
+		extract(path);
+		
+		for( int j=0;j<i;j++) {
+			//System.out.println(j+" "+t.get(j));
+			final int k=j;
+			String src=btn[k].getId();
+			//System.out.println(src);
+			//media=new Media(src);
+			btn[k].setOnAction((ActionEvent ev)->{
+				
+				
+				
+				mp.stop();
+				btn[songno].setStyle("-fx-background-color:rgba(0,0,0,0.0);-fx-text-fill:black;-fx-cursor:hand;");
+				btn[k].setStyle("-fx-background-color:orange;-fx-text-fill:white;-fx-cursor:hand;");
+				
+				songno=k;
+				currentsong=src;
+				
+				//mp=new MediaPlayer(media);
+				//mp.play();
+				//mp.setAutoPlay(true);
+				//seek();
+				mainPlay(songno);
+				
+				
+			});
+			if(src.equals(currentsong)) {
+				songno=k;
+				//System.out.println(songno+"Vineet//////");
+				}
+			vb.getChildren().add(btn[j]);
+		}
+		
+	//	playsong(songno);
+		
+		//media=new Media(t.get(10));
+	//	mp.stop();
+		//mp=new MediaPlayer(media);
+	//	mp.setAutoPlay(true);
+	//	System.out.println(mp.getMedia().getSource());
+	}
+	
+	@FXML
+	void play() {
+		if(mp.getStatus()==Status.PLAYING) {
+			mp.pause();
+			Image i=new Image("photo/play.png");
+			playbuttonview.setImage(i);
+			play.setTooltip(new Tooltip("Play"));
+		
+		}else {
+			mp.play();
+			Image i=new Image("photo/pause2.png");
+			playbuttonview.setImage(i);
+			play.setTooltip(new Tooltip("Pause"));
+		}
+		
+		
+		
+
+	}
+
+	@FXML
+	void drawer() {
+		if(scpane.getPrefWidth()==300) {
+			Image i=new Image("photo/songsclosed.png");
+			drawerview.setImage(i);
+			scpane.setPrefWidth(3);
+			vb.setPrefWidth(0);
+			drawerbutton.setText(">");
+			return;
+		}
+		Image i=new Image("photo/songs.png");
+		drawerview.setImage(i);
+	scpane.setPrefWidth(300);
+	scpane.setPrefHeight(400);
+	vb.setPrefWidth(300);
+	drawerbutton.setText("<");
+
+		
+	}
+	boolean songCheck(int sn) {
+		if(conn==null)
+			conn=JDBCConnection.connector();
+		try {
+			Statement st=conn.createStatement();
+			String name=btn[sn].getText();
+			name=name.replace("'", "''");
+			String q="SELECT * FROM song WHERE name='"+name+"';";
+			//System.out.println(q);
+		
+			ResultSet rs=st.executeQuery(q);
+			if(rs.next()) {
+				return true;
+			} 
+		} catch (SQLException e) {
+			return false;
+			//e.printStackTrace();
+		}
+		return false;
+	}
+	@FXML
+	void favsong() {
+		if(songCheck(songno)) {
+			if(conn==null)
+				conn=JDBCConnection.connector();
+			try {
+				Statement st=conn.createStatement();
+				String name=btn[songno].getText();
+				name=name.replace("'", "''");
+				String q="DELETE FROM song WHERE name='"+name+"';";
+				st.execute(q);
+				Image i=new Image("/photo/favblack.png");
+				favview.setImage(i);
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			return;
+		}
+		Image i=new Image("/photo/favyellow.png");
+		favview.setImage(i);
+		if(conn==null)
+		conn=JDBCConnection.connector();
+		try {
+			Statement st=conn.createStatement();
+			String name=btn[songno].getText();
+			String path=btn[songno].getId();
+			name=name.replace("'", "''");
+			path=path.replace("'", "''");
+			String q="INSERT INTO song(name,path) VALUES('"+name+"','"+path+ "');";
+			//System.out.println(q);
+			
+			st.executeUpdate(q);
+		
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
+	void setDB() {
+		File f=new File("./DB");
+		File f1=new File("./DB/FavSong.db");
+		if(f.exists() && f1.exists()) {
+			//System.out.println("exist");
+		return;
+		}
+		JDBCConnection.createFolder();
+		if(conn==null)
+		conn=JDBCConnection.connector();
+		try {
+			Statement st=conn.createStatement();
+			String q="CREATE TABLE song(name VARCHAR(1000),path VARCHAR(2000));";
+			st.executeUpdate(q);
+			q="CREATE TABLE setting(name VARCHAR(100),value VARCHAR(200));";
+			st.executeUpdate(q);
+			q="INSERT INTO setting(name,value) VALUES('togglebutton','off');";
+			st.execute(q);
+			st.close();
+			conn.close();
+		
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+
+}
+
+
+
