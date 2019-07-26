@@ -1,0 +1,35 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.JFXButton{
+	-fx-background-color:green;
+	
+}
+.JFXButton:hover{
+	-fx-background-color: green;
+}
+
+.control{
+	-fx-background-color: rgba(255,255,255, 0.4);
+	
+}
+
+.vb{
+	-fx-background-color:transparent ;
+	
+}
+
+.scpane{
+	-fx-background-color: rgba(0,0,0,0.0);
+}
+ 
+.ac{
+	/*-fx-background-image:url(file:///C:/Users/HP/Desktop/alax.png);*/
+	-fx-background-position: center ;
+	-fx-background-size: cover ;
+	-fx-background-repeat: no-repeat ;
+}
+.p{
+	-fx-background-color: rgba(0,0,0,0.2);
+}
+.bp{
+	-fx-background-color: rgba(255,255,255,0.1);	
+}
